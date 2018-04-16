@@ -113,87 +113,53 @@ where $R_b=L/\tan \gamma$ and $K=v/R_b$. However, this estimation is non-linear 
 
 
 \section{Control algorithm implementation}
-The control law purposed in Sec.(\ref{kine}) and the pose estimation algorithm purposed in Sec.(\ref{pose}) have been implemented in \texttt{drive\_to\_points.ipynb}.  Given the input \texttt{waypoints.txt}, the generated trajectory and the estimated poses along it is plotted as Fig.()
+The control law purposed in Sec.(\ref{kine}) and the pose estimation algorithm purposed in Sec.(\ref{pose}) have been implemented in \texttt{drive\_to\_points.ipynb}.  Given the input \texttt{waypoints.txt}, the generated (one viable) trajectory and the estimated poses along it is plotted as Fig.(\ref{ideal}). Yet this naive plan is actually not possible for the PiCar platform, for it ignores the speed limit of the car. To amend this, two solutions are provided:1. round the off-limit speed to the limits, e.g. if $v>MAX_v$, $v=MAX_v$, but this approach causes the control law to be unstable. 2. use constant speed, and scale the steering wheel control law accordingly. The latter approach will be used in the rest of the paper.
+
+The algorithm terminates as the estimated positions are at the vicinity of waypoints.
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=0.5\textwidth]{../ideal_traj.pdf}
-\caption{1000 different 100$\times$100 lattices with different $p$ values, the shortest path and the life time of fire}\label{fig3}
+\includegraphics[width=0.7\textwidth]{../ideal_traj.pdf}
+\caption{One generated trajectory.}\label{ideal}
+\end{figure}
+\section{Experiment and conclusion}
+The algorithm is run on Sunfounder's PiCar-V platform with input \texttt{waypoints.txt}. The designed trajectory is shown as Fig.(\ref{act})
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.7\textwidth]{../acutal_used.pdf}
+\caption{The trajectory and control plan actually used.}\label{act}
 \end{figure}
 
-\begin{enumerate}[label=(\alph*)]
-\item Beginning with Brown corpus and removing the stop-words and punctuation, making everything lowercase.
-\item Selecting the most commonly used words in the corpus. $V: \text{most commonly used 5000 words}$ and $C: \text{most commonly used 1000 words}$.
-\item For each word $w \in V$ and denote context $B_w^k$: in a text stream, for a word $w$, we denote the surrounding $2k$ words of every occurrence of $w$ as its context, with $k$ words before it and $k$ words after it. 
-\item Define $Pr(c|w)$ as given $w \in V$, the probability that $c \in C$ and $c \in B_w^k$.
-\item Then calculate $$\Phi_c(w)= max(0,\log \frac{Pr(c|w)}{Pr(c)})$$
-for each $w$.
-\item Apply PCA to $\Phi_c(w)$, to acquire a 100-dimensional representation of $\Phi_c(w)$, denoted as $\Psi(w)$
-\end{enumerate}
+The error for each points is listed as Tab.(\ref{tab1}). The error-bar is given as the  95\% confidence interval.
 
-\section{Nearest neighbor test}
-The result of nearest neighbor search for a random collection of 25 words and the corresponding cosine similarity is listed in Tab.(\ref{tab1}).
-There are pairs such as \textit {proceedings, midst}, easy to correspond to sentences like \textit {...in the midst of proceedings...}. And pairs such as \textit {external, internal}, \textit {letter, book}, \textit {day, week} and \textit {gray, green}, which are words in the same domain. There are also confusing pairs such as \textit {jail, di}. What is more, it also shows some worrying result like \textit {customers, drugs}
 \begin{table}[!h]
 \centering
-\caption{Experiment results for nearest neighbor}
+\caption{Experiment results on the robot}
 \label{tab1}
 \begin{tabular}{llr}
 
-$w$    & $c$ & Cosine similarity  \\
+Waypoints   & $\Delta$ distance/m& $\Delta$ radian  \\
 \hline
-external        &internal        &0.463563\\
-committed      & straightened  &  0.228246\\
-disposal     &   specialists    & 0.252870\\
-commission  &    department    &  0.473976\\
-chair       &    knees     &      0.473293\\
-torn        &    lap         &    0.197125\\
-judges       &   stem         &   0.214150\\
-joe         &    cousin     &     0.460737\\
-proceedings    & midst      &     0.053407\\
-customers   &    drugs      &     0.344528\\
-proved     &     examine       &  0.597234\\
-poverty    &     midst        &   0.197982\\
-letter       &   book         &   0.446783\\
-construction   & plant    &       0.502133\\
-identify     &   adding    &      0.306849\\
-day        &     week       &     0.302847\\
-gray        &    green    &       0.212985\\
-varied  &        shared     &     0.442941\\
-drank    &       hay      &       0.191549\\
-drawn    &       gray      &      0.506984\\
-package    &     hay        &     0.286869\\
-jail        &    di         &     0.234771\\
-convenience  &   hay      &       0.212920\\
-taxes      &     estimated      & 0.327287\\
-bars        &    puts     &       0.251591\\
+(0,0,0)        &/        &/\\
+(1,0,0)      & $0.04 \pm 0.01$  &  $0.05 \pm 0.02$\\
+(1,1,1.57)     &   $0.67 \pm 0.09$    & $0.70 \pm 0.12$\\
+(2,1,0)  &    $0.86 \pm 0.10$    &  $0.32 \pm 0.04$\\
+(2,2,-1.57)       &   $1.30 \pm 0.06$     &      $1.98 \pm 0.23$\\
+(1,1,-.78)        &    $2.16 \pm 0.44$        &    $1.59 \pm 0.07$\\
+(0.0.0)       &   $1.89 \pm 0.52$         &   $0.41 \pm 0.18$\\
 \hline
 \end{tabular}
 \end{table}
+It can be seen that the waypoint $(1,0,0)$ is the easiest and the algorithm can finish it almost without deviation. (1,1,1.57) and (1,1,-.78) are the two hardest: the former one requires a sharp turn and has high requirement for the pose estimation algorithm. The latter one contains continuous turning and again is hard for pose estimation.
+
+The algorithm is able to drive the vehicle back (although with huge deviation) and has a relatively small deviation in terms of pose ($0.41$).
+
+Clearly due to the lack of feedback, the error accumulates and the robot deviates more at the later waypoints. The robot is also prune to other issues such as motor acceleration rate, tyre pressure and turning rate limit, power difference of the two motors, etc. The algorithm, especially the pose estimation part does not accommodate the sliding and the road condition. Additionally, the control is over the motor power instead of the actual speed of the vehicle, which is the major source of uncertainty and error of the model.
 
 
 
-\section{Clustering}
-Next $V$ is clustered into 100 groups based on there embeddings via \texttt{sklearn.cluster}. Some of the top clusters are shown below:
 
-A cluster commonly used for weather report:
 
-\texttt{summer spring start winter spent coming sun fall suddenly afternoon
-saturday instead evening hot sunday started hours opened late cold}
-
-A cluster describing international affairs and education:
-
-\texttt{aid vocational support assistance financial planning services technical defense schools
-programs training private international research act foreign community medical provide}
-
-A cluster talking about production economy:
-
-\texttt{income estimated net capital annual operating additional average pay property
-increased farm rates billion price amount stock increase production pressure}
-
-And a cluster about military:
-
-\texttt{staff division army corps activities personnel management facilities services forces
-association peace research medical committee department force industrial military service}
 %\begin{figure}[htbp]
 %\centering
 %\includegraphics[width=0.5\textwidth]{./src/lctwomethods.eps}

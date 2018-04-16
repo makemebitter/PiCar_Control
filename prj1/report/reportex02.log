@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.14159265-2.6-0.99998 (TeX Live 2017) (preloaded format=xelatex 2018.3.19)  15 APR 2018 18:09
+This is XeTeX, Version 3.14159265-2.6-0.99998 (TeX Live 2017) (preloaded format=xelatex 2018.3.19)  15 APR 2018 19:24
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -564,73 +564,34 @@ LaTeX Font Info:    Try loading font information for U+rsfs on input line 56.
 File: ursfs.fd 1998/03/24 rsfs font definition file (jk)
 ) [1
 
-]
+] [2]
 File: ../ideal_traj.pdf Graphic file (type pdf)
 <use ../ideal_traj.pdf>
-
-Overfull \hbox (29.43384pt too wide) in paragraph at lines 125--126
-[]\TU/lmr/m/n/12 Selecting the most commonly used words in the corpus. $\OML/cm
-m/m/it/12 V \OT1/cmr/m/n/12 : []$
- []
-
-[2] [3]
-Overfull \hbox (19.92491pt too wide) in paragraph at lines 181--182
-[]\TU/lmtt/m/n/12 summer spring start winter spent coming sun fall suddenly aft
-ernoon saturday
- []
-
-[4]
-Overfull \hbox (38.46492pt too wide) in paragraph at lines 186--187
-[]\TU/lmtt/m/n/12 aid vocational support assistance financial planning services
- technical defense
- []
+File: ../acutal_used.pdf Graphic file (type pdf)
+<use ../acutal_used.pdf>
 
 
-Overfull \hbox (12.28491pt too wide) in paragraph at lines 186--187
-\TU/lmtt/m/n/12 schools programs training private international research act fo
-reign community
- []
+LaTeX Warning: `!h' float specifier changed to `!ht'.
 
-
-Overfull \hbox (26.10492pt too wide) in paragraph at lines 191--192
-[]\TU/lmtt/m/n/12 income estimated net capital annual operating additional aver
-age pay property
- []
-
-
-Overfull \hbox (26.10492pt too wide) in paragraph at lines 196--202
-[]\TU/lmtt/m/n/12 staff division army corps activities personnel management fac
-ilities services
- []
-
-
-Overfull \hbox (18.46492pt too wide) in paragraph at lines 196--202
-\TU/lmtt/m/n/12 forces association peace research medical committee department 
-force industrial
- []
-
+[3]
 \tf@thm=\write4
 \openout4 = `reportex02.thm'.
 
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 259.
-[5]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 259.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 225.
+ [4]
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 225.
  (./reportex02.aux)
-Package atveryend Info: Empty hook `AtVeryEndDocument' on input line 259.
-Package atveryend Info: Empty hook `AtEndAfterFileList' on input line 259.
-
-
-LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
-
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 259.
+Package atveryend Info: Empty hook `AtVeryEndDocument' on input line 225.
+Package atveryend Info: Empty hook `AtEndAfterFileList' on input line 225.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 225.
  ) 
 Here is how much of TeX's memory you used:
- 12750 strings out of 493007
- 187032 string characters out of 6134605
- 291849 words of memory out of 5000000
- 16604 multiletter control sequences out of 15000+600000
- 12314 words of font info for 60 fonts, out of 8000000 for 9000
+ 12736 strings out of 493007
+ 186719 string characters out of 6134605
+ 288849 words of memory out of 5000000
+ 16595 multiletter control sequences out of 15000+600000
+ 12290 words of font info for 57 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
- 44i,9n,42p,462b,464s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 44i,8n,42p,768b,335s stack positions out of 5000i,500n,10000p,200000b,80000s
 
-Output written on reportex02.pdf (5 pages).
+Output written on reportex02.pdf (4 pages).
