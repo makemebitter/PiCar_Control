@@ -35,7 +35,7 @@ imgpoints = [] # 2d points in image plane.
 cap = cv2.VideoCapture(0)
 
 found = 0
-while(found < 100):  # Here, 10 can be changed to whatever number you like to choose
+while(found < 10):  # Here, 10 can be changed to whatever number you like to choose
     ret, img = cap.read() # Capture frame-by-frame
     print ret
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
@@ -59,12 +59,12 @@ while(found < 100):  # Here, 10 can be changed to whatever number you like to ch
 #     display.display(plt.show())
     
 #     cv2.startWindowThread()
-    cv2.imshow('img', img)
+#     cv2.imshow('img', img)
     cv2.waitKey(10)
 #     sleep(0.01)
 # When everything done, release the capture
 cap.release()
-cv2.destroyAllWindows()
+# cv2.destroyAllWindows()
 
 ret, mtx, dist, rvecs, tvecs = cv2.calibrateCamera(objpoints, imgpoints, gray.shape[::-1], None, None)
 
@@ -76,6 +76,6 @@ ret, mtx, dist, rvecs, tvecs = cv2.calibrateCamera(objpoints, imgpoints, gray.sh
 
 data = {'camera_matrix': np.asarray(mtx).tolist(), 'dist_coeff': np.asarray(dist).tolist()}
 
-with open("calibration_mylaptop.yaml", "w") as f:
+with open("calibration.yaml", "w") as f:
     yaml.dump(data, f)
 
