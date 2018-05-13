@@ -1,0 +1,277 @@
+\documentclass[12pt]{article}
+\usepackage{graphicx}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{mathrsfs}
+\usepackage{amsmath}
+\usepackage{subfig}
+\usepackage{algorithm2e}
+
+\SetKwInOut{Parameter}{parameter}
+
+\usepackage{enumitem}
+\textheight 225mm
+\textwidth 166mm
+\oddsidemargin 0mm
+\evensidemargin 0mm
+\topmargin -14mm
+\parindent 20pt
+\pagestyle{plain}
+\pagenumbering{arabic}
+\renewcommand{\baselinestretch}{1.18}
+
+\usepackage[unicode]{hyperref}
+%\usepackage[numbers,sort&compress]{natbib}
+\usepackage{booktabs}
+% With this package you can set the size of the margins manually:
+\usepackage[margin=1in]{geometry}
+\usepackage{amssymb}
+
+%\newenvironment{claim}[1]{\par\noindent\underline{Claim:}\space#1}{}
+%\newenvironment{claimproof}[1]{\par\noindent\underline{Proof:}\space#1}{\hfill $\blacksquare$}
+\usepackage[hyperref,amsmath, thmmarks]{ntheorem}
+\usepackage{mathtools}
+\DeclarePairedDelimiter\ceil{\lceil}{\rceil}
+\DeclarePairedDelimiter\floor{\lfloor}{\rfloor}
+
+\newtheorem{claim}{Claim}
+\theoremsymbol{\rule{1ex}{1ex}}
+\newtheorem{proof}{Proof}
+\theoremsymbol{\rule{1ex}{1ex}}
+\newtheorem{claimproof}{Proof of claim}
+\title{EKF-SLAM}
+
+\author{Yuhao Zhang}
+
+\date{\today}
+\begin{document}
+\maketitle
+% Enter the exercise number, your name and date here:
+%\noindent\parbox{\linewidth}{
+% \parbox{.25\linewidth}{ \large HW2 }\hfill
+% \parbox{.5\linewidth}{\begin{center} \large Yuhao Zhang \end{center}}\hfill
+% \parbox{.2\linewidth}{\begin{flushright} \large Jan 22, 2018 \end{flushright}}
+%}
+%\noindent\rule{\linewidth}{2pt}
+
+
+%\section{Introduction}
+%
+%Briefly introduce the problem here. Describe what you have to do and what the goal is. Make sure to cite any references that you might use \cite{knuth}.
+\section{Introduction}
+This project is a model of the car-like robot and a control algorithm to traverse several waypoints with specific coordinates and poses under the guidance with QR codes. The code is for Sunfounder's PiCar-V platform and a webcam attached to it is used.
+
+\section{Pose estimation using PnP}
+\label{pose}
+With a simple pinhole model the scene view $s$ of a camera is formulated as:
+$$
+s
+\begin{pmatrix}
+u \\
+v \\
+1 \\
+\end{pmatrix}
+=
+\begin{pmatrix}
+f_x & 0 & c_x \\
+0  & f_y &c_y \\
+0 & 0 & 1\\
+\end{pmatrix}
+\begin{pmatrix}
+r_{11} & r_{12} & r_{13} & t_1\\
+r_{21}  & r_{22} &c_{23} & t_2\\
+r_{31} & r_{32} & r_{33} & t_3\\
+\end{pmatrix}
+\begin{pmatrix}
+X \\
+Y\\
+Z \\
+1\\
+\end{pmatrix},
+$$
+where $(X,Y,Z)$ is the coordinate of the object point in world reference frame, $(u,v)$ is the coordinates of the projected object on the view. The first factor on the right hand side is the camera matrix which depicts the intrinsic properties of the camera, while the second factor is the rotation-translation matrix that transforms from world reference frame to the camera frame.
+
+The rotation-translation matrix $R-T$ is solvable by first, detecting the QR code using library such as \texttt{zbar}. Second,  finding the corner points of it and associate with their projections on the view. Once $R-T$ is obtained, one can solve directly for its inverse, as the inverse serves directly for pose estimation of the camera. 
+
+Given $R$ which is the rotation matrix, the inverse of it is denoted as $R^{-1}=R^{T}$. Then the coordinates of the camera in world reference frame are obtained as 
+
+$$(x,y,z)=-R^T V.$$
+And the distance between the camera and the object:
+
+$$d=\sqrt{(X-x)^2+(Y-y)^2+Z-z)^2}.$$
+Furthermore, the Euler angles representation can also be acquired easily form $R$. As for car-like mobile robots, the motion is usually confined to 2-D plane. Consider such a plane is depicted is a right-hand coordinate system as $x-z$ plane and axis $y$ is pointing to the ground.  Then only Euler angle $ \theta_y$ is of interest. Then the problem can be largely simplified.  For a landmark $M(X,Y,\gamma)$ in world reference frame, the current pose of the camera is 
+
+$$(X-d\cos(\theta_y),Y+d\sin(\theta_y),\pi/2-\theta_y+\gamma).$$
+With this pose estimation, one can combine a control algorithm with feedback from QR codes detected by camera.
+
+A picture showing the performance of such model is plotted as  Fig. (\ref{QR}).
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.8\textwidth]{./Results_screenshot.pdf}
+\caption{The QR code used as a landmark.}\label{QR}
+\end{figure}
+\section{Kinematics and control law}
+\label{kine}
+Ackerman model can be used to describe the kinematics of a car-like robot: 
+$$\frac{d x}{dt}=v\cos \theta,$$
+$$\frac{d y}{dt}=v\cos \theta,$$
+$$\frac{d \theta}{dt}=\frac{v}{L}\tan \gamma,$$
+where $(x,y)$ is the position of the middle point of the back wheel axis of the robot in world reference frame. $\theta$ is the angle of pose of the robot. The steering wheel angle is $\gamma$ and the velocity of the back wheel is $v$. $L$ is the length of the vehicle or wheel base.
+
+These equations can be re-written as:
+$$
+\begin{pmatrix}
+\frac{d x}{dt} \\
+\frac{d \omega}{dt} \\
+\frac{d \theta}{dt} \\
+\end{pmatrix}
+=
+\begin{pmatrix}
+\cos \theta & 0 \\
+\sin \theta & 0 \\
+0 & 1\\
+\end{pmatrix}
+\begin{pmatrix}
+v \\
+\omega
+\end{pmatrix}.
+$$
+With the initial position-pose $(x,y,\theta)$ and the goal $(x^*,y^*,\theta^*)$, it is more convenient to write the equations in polar system via a transformation:
+$$\rho=\sqrt{\Delta_x^2+\Delta_y^2},$$
+$$\alpha=\arctan \frac{\Delta_y}{\Delta_x}-\theta,$$
+$$\beta=-\theta-\alpha+\theta^*.$$
+
+The linear control law for $-\pi/2<\alpha\le \pi/2$, i.e. the waypoint is in front of the vehicle is:
+$$v=k_\rho \rho,$$
+$$\omega=k_\alpha \alpha+k_\beta \beta,$$
+where $k_\rho$, $k_\alpha$, $k_\beta$ are arbitrary coefficients that satisfies $k_\rho>0, k_\beta<0,k_\alpha-k_\rho>0.$
+
+The control law for the cases where the waypoint is behind the vehicle is the same as above, but with transformed angles:
+
+$$\alpha'=-\pi-\beta,$$
+$$\beta'=-\pi-\alpha,$$
+and $v'=-v$.
+
+%\section{Pose estimation}
+%\label{pose}
+%Without the feedback from sensors, it is required to estimate the motion from the kinematics of the robot directly. Using the linear approximation of the kinematics equations for a short time period $\Delta t$ one can obtain
+%$$\Delta(x,y,\theta)=(v\cos \theta \Delta t ,v \sin \theta \Delta t, v/L \tan \gamma \Delta t).$$
+%
+%Alternatively, the exact solution can be obtained by solving these differential equations directly:
+%$$\Delta(x,y,\theta)=(R_b\sin(K\Delta t),R_b(1-\cos(K\Delta t)),K\Delta t),$$
+%where $R_b=L/\tan \gamma$ and $K=v/R_b$. However, this estimation is non-linear and makes the control law purposed unstable. Therefore the linear approximation will be used in the following sections.
+
+
+\section{implementation and setup}
+The control law purposed in Sec.(\ref{kine}) and the pose estimation algorithm purposed in Sec.(\ref{pose}) have been implemented in \texttt{QR\_code\_navi.ipynb}.  Given the input \texttt{waypoints}, the algorithm does time sampling after every $\Delta t$. It utilize the $R-T$ matrix described in Sec.(\ref{pose}) to localize the camera in world frame based on the QR codes scanned. Then the control plan is generated by the algorithm described in Sec.(\ref{kine}). The function \texttt{pose\_estimator} also accepts precedence of multiple QR codes, in which case the estimated pose is calculated as the mean.
+
+However, this approach suffers from huge deviation as the orientation estimation of camera based on a single QR code is not precise enough. There are typically $\sim 0.2m$ error in terms of position estimation and $\sim 10^\circ$ error in terms of the angle $\theta_y$. Combining with the control algorithm it gives unacceptable errors for localization, as the  generated plan tends to be more and more unstable once the localization error begins to manifest.
+
+As an alternate solution, the orientation information of the camera obtained by solving for rotation matrix is discarded, only the position of the camera is used. Furthermore, the time sampling control algorithm is substituted by straight lines plus constant curvature turning that are calibrated at real-time by the current position of the camera. 
+
+%\begin{figure}[htbp]
+%\centering
+%\includegraphics[width=0.7\textwidth]{../ideal_traj.pdf}
+%\caption{One generated trajectory.}\label{ideal}
+%\end{figure}
+\section{Experiment and conclusion}
+The algorithm is run on Sunfounder's PiCar-V platform with input \texttt{waypoints}. %\begin{figure}[htbp]
+%\centering
+%\includegraphics[width=0.7\textwidth]{../acutal_used.pdf}
+%\caption{The trajectory and control plan actually used.}\label{act}
+%\end{figure}
+
+The error for each points is listed as Tab.(\ref{tab1}). The error-bar is given as the  95\% confidence interval.
+
+\begin{table}[!h]
+\centering
+\caption{Experiment results on the robot}
+\label{tab1}
+\begin{tabular}{llr}
+
+Waypoints   & $\Delta$ distance/m& $\Delta$ radian  \\
+\hline
+(0,0,0)        &/        &/\\
+(1,0,0)      & $0.02 \pm 0.01$  &  $0.03 \pm 0.01$\\
+(2,2,$\pi$)     &   $0.7 \pm 0.05$    & $0.24 \pm 0.05$\\
+(0,0,0)  &    $0.13 \pm 0.10$    &  $0.32 \pm 0.06$\\
+\hline
+\end{tabular}
+\end{table}
+
+The performance has improved much comparing to prj1. With the guidance of QR code the algorithm can achieve almost perfect result on waypoint $(1,0,0)$. Yet for (2,2,$\pi$) and (0,0,0) it is not as promising. 
+
+The algorithm of this experiment only utilizes the coordinates generated by the feedback of QR codes, which means it cannot estimate its current orientation. It is the major reason for the errors. This can also be seen from the error of the orientations.
+
+
+It might also be possible to use a "track ball" algorithm to guide the car and ignore the PnP problem and frame transformation, as in this task the waypoints are not too complicated. In such a way the accuracy of localization might be improved.
+
+
+
+
+
+
+
+%\begin{figure}[htbp]
+%\centering
+%\includegraphics[width=0.5\textwidth]{./src/lctwomethods.eps}
+%\caption{Learning curve for steepest-direction coordinate descent and random-feature coordinate descent.}\label{fig1}
+%\end{figure}
+
+%\begin{table}[hp]
+%\centering
+%\caption{Experiment results}
+%\label{tab1}
+%\begin{tabular}{llr}
+%
+%$M$    & Prototype & Error rate (\%) \\
+%\hline
+%1000      & random    & $13.02 \pm  0.73$    \\
+%          & random*        & $11. 84 \pm 0.20$      \\
+%5000       & random     & $6.63 \pm 0.11$      \\
+%		& random*     &$6.42 \pm 0.22$      \\
+%10000       & random     & $5.07 \pm 0.2$     \\
+%		 & random*      & $4.8 \pm 0.26$       \\
+%\hline
+%\end{tabular}
+%\end{table}
+
+
+
+
+
+
+
+%\subsection{Task 3}
+%For 1000 different 100$\times$100 lattices with different $p$ values, the shortest path and the life time of fire is plotted in Fig.(\ref{fig3}). It can be seen clearly that the curves have a phase change point at $p_c\approx0.59$, after which the minimal step and life of fire drop quickly and approximates 100, the width of lattice.
+%
+%\begin{figure}[htbp]
+%\centering
+%\includegraphics[width=0.5\textwidth]{../figures/N100pvariable.eps}
+%\caption{1000 different 100$\times$100 lattices with different $p$ values, the shortest path and the life time of fire}\label{fig3}
+%\end{figure}
+%
+%For different values of width of lattice $N$, we use 1000 different random lattices per $N$ to find the correlation between the ratio of spanning cluster and the $p$ value, which is plotted in Fig.(\ref{fig4})
+%
+%
+%\begin{figure}[htbp]
+%\centering
+%\includegraphics[width=0.5\textwidth]{../figures/ratio.eps}
+%\caption{1000 different lattices of $N=50, 100, 200$ with different $p$ values, the ratio of the spanning cluster}\label{fig4}
+%\end{figure}
+%
+%
+%\section{Discussion}
+%It can be found through these figures that $p_c\approx0.59$ and it is irrelevant to the width of lattice $N$.
+%\begin{thebibliography}{99}
+%
+%\bibitem{knuth}
+%  Knuth, Ervin D.,
+%  \emph{The art of computer programming}, 
+%  Addison Wesley, Massachusetts,
+%  3rd edition,
+%  1997.
+%
+%\end{thebibliography}
+
+\end{document}
