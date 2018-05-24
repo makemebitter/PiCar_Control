@@ -15,17 +15,36 @@
 \global\let\hyper@last\relax 
 \gdef\HyperFirstAtBeginDocument#1{#1}
 \providecommand*\HyPL@Entry[1]{}
+\citation{ekf}
 \HyPL@Entry{0<</S/D>>}
 \providecommand \oddpage@label [2]{}
 \@writefile{toc}{\contentsline {section}{\numberline {1}Introduction}{1}{section.1}}
-\@writefile{toc}{\contentsline {section}{\numberline {2}Pose estimation using PnP}{1}{section.2}}
-\newlabel{pose}{{2}{1}{Pose estimation using PnP}{section.2}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces The QR code used as a landmark.\relax }}{2}{figure.caption.1}}
-\providecommand*\caption@xref[2]{\@setref\relax\@undefined{#1}}
-\newlabel{QR}{{1}{2}{The QR code used as a landmark.\relax }{figure.caption.1}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {3}Kinematics and control law}{2}{section.3}}
-\newlabel{kine}{{3}{2}{Kinematics and control law}{section.3}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {4}implementation and setup}{3}{section.4}}
-\@writefile{toc}{\contentsline {section}{\numberline {5}Experiment and conclusion}{3}{section.5}}
-\@writefile{lot}{\contentsline {table}{\numberline {1}{\ignorespaces Experiment results on the robot\relax }}{4}{table.caption.2}}
-\newlabel{tab1}{{1}{4}{Experiment results on the robot\relax }{table.caption.2}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {2}EKF-SLAM}{1}{section.2}}
+\newlabel{EKF}{{2}{1}{EKF-SLAM}{section.2}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {3}Localization}{1}{section.3}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.1}Distance and Pose estimation using PnP}{2}{subsection.3.1}}
+\newlabel{PnP}{{3.1}{2}{Distance and Pose estimation using PnP}{subsection.3.1}{}}
+\newlabel{pose}{{3.1}{2}{Distance and Pose estimation using PnP}{subsection.3.1}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.2}Bearing}{2}{subsection.3.2}}
+\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces The QR code used as a landmark.}}{3}{figure.1}}
+\newlabel{QR}{{1}{3}{The QR code used as a landmark}{figure.1}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {4}Kinematics and control law}{3}{section.4}}
+\newlabel{kine}{{4}{3}{Kinematics and control law}{section.4}{}}
+\citation{ekf}
+\@writefile{toc}{\contentsline {section}{\numberline {5}implementation and setup}{4}{section.5}}
+\@writefile{toc}{\contentsline {section}{\numberline {6}Experiment and conclusion}{5}{section.6}}
+\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces The initial map and the initial pose of the robot. Data entry denoted as \textit  {Simulated} means the optimal situation and \textit  {Estimated} means the actual data feedback from the sensor and processed with Kalman filter.}}{5}{figure.2}}
+\newlabel{setup}{{2}{5}{The initial map and the initial pose of the robot. Data entry denoted as \textit {Simulated} means the optimal situation and \textit {Estimated} means the actual data feedback from the sensor and processed with Kalman filter}{figure.2}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces The actual photo of the test ground. }}{5}{figure.3}}
+\newlabel{ph}{{3}{5}{The actual photo of the test ground}{figure.3}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces Intermediate maps as EKF-SLAM goes on. Data entry denoted as \textit  {Simulated} means the optimal situation and \textit  {Estimated} means the actual data feedback from the sensor and processed with Kalman filter.}}{7}{figure.4}}
+\newlabel{some}{{4}{7}{Intermediate maps as EKF-SLAM goes on. Data entry denoted as \textit {Simulated} means the optimal situation and \textit {Estimated} means the actual data feedback from the sensor and processed with Kalman filter}{figure.4}{}}
+\@writefile{lof}{\contentsline {subfigure}{\numberline{(a)}{\ignorespaces {step 1}}}{7}{subfigure.4.1}}
+\@writefile{lof}{\contentsline {subfigure}{\numberline{(b)}{\ignorespaces {step 5}}}{7}{subfigure.4.2}}
+\@writefile{lof}{\contentsline {subfigure}{\numberline{(c)}{\ignorespaces {step 10}}}{7}{subfigure.4.3}}
+\@writefile{lof}{\contentsline {subfigure}{\numberline{(d)}{\ignorespaces {step 15}}}{7}{subfigure.4.4}}
+\@writefile{lof}{\contentsline {subfigure}{\numberline{(e)}{\ignorespaces {step 20}}}{7}{subfigure.4.5}}
+\@writefile{lof}{\contentsline {subfigure}{\numberline{(f)}{\ignorespaces {step 30}}}{7}{subfigure.4.6}}
+\@writefile{lof}{\contentsline {subfigure}{\numberline{(g)}{\ignorespaces {step 50}}}{7}{subfigure.4.7}}
+\@writefile{lof}{\contentsline {subfigure}{\numberline{(h)}{\ignorespaces {step 145}}}{7}{subfigure.4.8}}
+\bibcite{ekf}{1}
