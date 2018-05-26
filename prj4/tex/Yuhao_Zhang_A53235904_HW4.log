@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.14159265-2.6-0.99998 (TeX Live 2017) (preloaded format=xelatex 2018.3.19)  24 MAY 2018 22:40
+This is XeTeX, Version 3.14159265-2.6-0.99998 (TeX Live 2017) (preloaded format=xelatex 2018.3.19)  25 MAY 2018 17:11
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -517,6 +517,9 @@ LaTeX Info: Redefining \nameref on input line 47.
 \openout3 = `Yuhao_Zhang_A53235904_HW4.out'.
 
 
+
+Package hyperref Warning: Rerun to get /PageLabels entry.
+
 *geometry* driver: auto-detecting
 *geometry* detected driver: xetex
 *geometry* verbose mode - [ preamble ] result:
@@ -564,32 +567,41 @@ LaTeX Font Info:    Try loading font information for U+rsfs on input line 56.
 
 (/usr/local/texlive/2017/texmf-dist/tex/latex/jknapltx/ursfs.fd
 File: ursfs.fd 1998/03/24 rsfs font definition file (jk)
-) [1
+)
+
+LaTeX Warning: Citation `ekf' on page 1 undefined on input line 64.
+
+
+LaTeX Warning: Reference `PnP' on page 1 undefined on input line 64.
+
+[1
 
 ] [2]
 
-LaTeX Warning: File `./bearing_distance.png' not found on input line 120.
+LaTeX Warning: Reference `QR' on page 3 undefined on input line 117.
 
-./Yuhao_Zhang_A53235904_HW4.tex:120: Unable to load picture or PDF file './bear
-ing_distance.png'.
-<to be read again> 
-                   }
-l.120 ...th=0.7\textwidth]{./bearing_distance.png}
-                                                  
-? 
-
-./Yuhao_Zhang_A53235904_HW4.tex:120: Package graphics Error: Division by 0.
-
-See the graphics package documentation for explanation.
-Type  H <return>  for immediate help.
- ...                                              
-                                                  
-l.120 ...th=0.7\textwidth]{./bearing_distance.png}
-                                                  
-? 
-File: ./bearing_distance.png Graphic file (type bmp)
-<./bearing_distance.png>
+File: ../figures/bearing_distance.png Graphic file (type bmp)
+<../figures/bearing_distance.png>
 [3]
+
+LaTeX Warning: Reference `EKF' on page 4 undefined on input line 178.
+
+
+LaTeX Warning: Citation `ekf' on page 4 undefined on input line 178.
+
+
+LaTeX Warning: Reference `pose' on page 4 undefined on input line 178.
+
+
+LaTeX Warning: Reference `pose' on page 4 undefined on input line 180.
+
+[4]
+
+LaTeX Warning: Reference `setup' on page 5 undefined on input line 189.
+
+
+LaTeX Warning: Reference `ph' on page 5 undefined on input line 189.
+
 
 LaTeX Warning: File `./figs/20180514-044756/setup.pdf' not found on input line 
 192.
@@ -601,314 +613,20 @@ LaTeX Warning: File `./figs/20180514-044756/setup.pdf' not found on input line
 l.192 ...twidth]{./figs/20180514-044756/setup.pdf}
                                                   
 ? 
-
-./Yuhao_Zhang_A53235904_HW4.tex:192: Package graphics Error: Division by 0.
-
-See the graphics package documentation for explanation.
-Type  H <return>  for immediate help.
- ...                                              
-                                                  
+./Yuhao_Zhang_A53235904_HW4.tex:192: Emergency stop.
+<to be read again> 
+                   }
 l.192 ...twidth]{./figs/20180514-044756/setup.pdf}
                                                   
-? 
-File: ./figs/20180514-044756/setup.pdf Graphic file (type pdf)
-<use ./figs/20180514-044756/setup.pdf>
-./Yuhao_Zhang_A53235904_HW4.tex:192: Unable to load picture or PDF file './figs
-/20180514-044756/setup.pdf'.
-<to be read again> 
-                   \GPT@clipend 
-l.192 ...twidth]{./figs/20180514-044756/setup.pdf}
-                                                  
-? 
+End of file on the terminal!
 
-LaTeX Warning: File `./figs/pg.JPG' not found on input line 197.
-
-./Yuhao_Zhang_A53235904_HW4.tex:197: Unable to load picture or PDF file './figs
-/pg.JPG'.
-<to be read again> 
-                   }
-l.197 ...phics[width=0.5\textwidth]{./figs/pg.JPG}
-                                                  
-? 
-
-./Yuhao_Zhang_A53235904_HW4.tex:197: Package graphics Error: Division by 0.
-
-See the graphics package documentation for explanation.
-Type  H <return>  for immediate help.
- ...                                              
-                                                  
-l.197 ...phics[width=0.5\textwidth]{./figs/pg.JPG}
-                                                  
-? 
-File: ./figs/pg.JPG Graphic file (type bmp)
-<./figs/pg.JPG>
-[4]
-
-LaTeX Warning: File `./figs/20180514-044756/0.pdf' not found on input line 206.
-
-
-./Yuhao_Zhang_A53235904_HW4.tex:206: Unable to load picture or PDF file './figs
-/20180514-044756/0.pdf'.
-<to be read again> 
-                   }
-l.206 ...dth = 3in]{./figs/20180514-044756/0.pdf}}
-                                                  
-? 
-
-./Yuhao_Zhang_A53235904_HW4.tex:206: Package graphics Error: Division by 0.
-
-See the graphics package documentation for explanation.
-Type  H <return>  for immediate help.
- ...                                              
-                                                  
-l.206 ...dth = 3in]{./figs/20180514-044756/0.pdf}}
-                                                  
-? 
-File: ./figs/20180514-044756/0.pdf Graphic file (type pdf)
-<use ./figs/20180514-044756/0.pdf>
-./Yuhao_Zhang_A53235904_HW4.tex:206: Unable to load picture or PDF file './figs
-/20180514-044756/0.pdf'.
-<to be read again> 
-                   \GPT@clipend 
-l.206 ...dth = 3in]{./figs/20180514-044756/0.pdf}}
-                                                  
-? 
-
-LaTeX Warning: File `./figs/20180514-044756/5.pdf' not found on input line 207.
-
-
-./Yuhao_Zhang_A53235904_HW4.tex:207: Unable to load picture or PDF file './figs
-/20180514-044756/5.pdf'.
-<to be read again> 
-                   }
-l.207 ...dth = 3in]{./figs/20180514-044756/5.pdf}}
-                                                  \\
-? 
-
-./Yuhao_Zhang_A53235904_HW4.tex:207: Package graphics Error: Division by 0.
-
-See the graphics package documentation for explanation.
-Type  H <return>  for immediate help.
- ...                                              
-                                                  
-l.207 ...dth = 3in]{./figs/20180514-044756/5.pdf}}
-                                                  \\
-? 
-File: ./figs/20180514-044756/5.pdf Graphic file (type pdf)
-<use ./figs/20180514-044756/5.pdf>
-./Yuhao_Zhang_A53235904_HW4.tex:207: Unable to load picture or PDF file './figs
-/20180514-044756/5.pdf'.
-<to be read again> 
-                   \GPT@clipend 
-l.207 ...dth = 3in]{./figs/20180514-044756/5.pdf}}
-                                                  \\
-? 
-
-LaTeX Warning: File `./figs/20180514-044756/10.pdf' not found on input line 208
-.
-
-./Yuhao_Zhang_A53235904_HW4.tex:208: Unable to load picture or PDF file './figs
-/20180514-044756/10.pdf'.
-<to be read again> 
-                   }
-l.208 ...th = 3in]{./figs/20180514-044756/10.pdf}}
-                                                  
-? 
-
-./Yuhao_Zhang_A53235904_HW4.tex:208: Package graphics Error: Division by 0.
-
-See the graphics package documentation for explanation.
-Type  H <return>  for immediate help.
- ...                                              
-                                                  
-l.208 ...th = 3in]{./figs/20180514-044756/10.pdf}}
-                                                  
-? 
-File: ./figs/20180514-044756/10.pdf Graphic file (type pdf)
-<use ./figs/20180514-044756/10.pdf>
-./Yuhao_Zhang_A53235904_HW4.tex:208: Unable to load picture or PDF file './figs
-/20180514-044756/10.pdf'.
-<to be read again> 
-                   \GPT@clipend 
-l.208 ...th = 3in]{./figs/20180514-044756/10.pdf}}
-                                                  
-? 
-
-LaTeX Warning: File `./figs/20180514-044756/15.pdf' not found on input line 209
-.
-
-./Yuhao_Zhang_A53235904_HW4.tex:209: Unable to load picture or PDF file './figs
-/20180514-044756/15.pdf'.
-<to be read again> 
-                   }
-l.209 ...th = 3in]{./figs/20180514-044756/15.pdf}}
-                                                   \\
-? 
-
-./Yuhao_Zhang_A53235904_HW4.tex:209: Package graphics Error: Division by 0.
-
-See the graphics package documentation for explanation.
-Type  H <return>  for immediate help.
- ...                                              
-                                                  
-l.209 ...th = 3in]{./figs/20180514-044756/15.pdf}}
-                                                   \\
-? 
-File: ./figs/20180514-044756/15.pdf Graphic file (type pdf)
-<use ./figs/20180514-044756/15.pdf>
-./Yuhao_Zhang_A53235904_HW4.tex:209: Unable to load picture or PDF file './figs
-/20180514-044756/15.pdf'.
-<to be read again> 
-                   \GPT@clipend 
-l.209 ...th = 3in]{./figs/20180514-044756/15.pdf}}
-                                                   \\
-? 
-
-LaTeX Warning: File `./figs/20180514-044756/20.pdf' not found on input line 210
-.
-
-./Yuhao_Zhang_A53235904_HW4.tex:210: Unable to load picture or PDF file './figs
-/20180514-044756/20.pdf'.
-<to be read again> 
-                   }
-l.210 ...th = 3in]{./figs/20180514-044756/20.pdf}}
-                                                  
-? 
-
-./Yuhao_Zhang_A53235904_HW4.tex:210: Package graphics Error: Division by 0.
-
-See the graphics package documentation for explanation.
-Type  H <return>  for immediate help.
- ...                                              
-                                                  
-l.210 ...th = 3in]{./figs/20180514-044756/20.pdf}}
-                                                  
-? 
-File: ./figs/20180514-044756/20.pdf Graphic file (type pdf)
-<use ./figs/20180514-044756/20.pdf>
-./Yuhao_Zhang_A53235904_HW4.tex:210: Unable to load picture or PDF file './figs
-/20180514-044756/20.pdf'.
-<to be read again> 
-                   \GPT@clipend 
-l.210 ...th = 3in]{./figs/20180514-044756/20.pdf}}
-                                                  
-? 
-
-LaTeX Warning: File `./figs/20180514-044756/30.pdf' not found on input line 211
-.
-
-./Yuhao_Zhang_A53235904_HW4.tex:211: Unable to load picture or PDF file './figs
-/20180514-044756/30.pdf'.
-<to be read again> 
-                   }
-l.211 ...th = 3in]{./figs/20180514-044756/30.pdf}}
-                                                   \\
-? 
-
-./Yuhao_Zhang_A53235904_HW4.tex:211: Package graphics Error: Division by 0.
-
-See the graphics package documentation for explanation.
-Type  H <return>  for immediate help.
- ...                                              
-                                                  
-l.211 ...th = 3in]{./figs/20180514-044756/30.pdf}}
-                                                   \\
-? 
-File: ./figs/20180514-044756/30.pdf Graphic file (type pdf)
-<use ./figs/20180514-044756/30.pdf>
-./Yuhao_Zhang_A53235904_HW4.tex:211: Unable to load picture or PDF file './figs
-/20180514-044756/30.pdf'.
-<to be read again> 
-                   \GPT@clipend 
-l.211 ...th = 3in]{./figs/20180514-044756/30.pdf}}
-                                                   \\
-? 
-
-LaTeX Warning: File `./figs/20180514-044756/50.pdf' not found on input line 212
-.
-
-./Yuhao_Zhang_A53235904_HW4.tex:212: Unable to load picture or PDF file './figs
-/20180514-044756/50.pdf'.
-<to be read again> 
-                   }
-l.212 ...th = 3in]{./figs/20180514-044756/50.pdf}}
-                                                  
-? 
-
-./Yuhao_Zhang_A53235904_HW4.tex:212: Package graphics Error: Division by 0.
-
-See the graphics package documentation for explanation.
-Type  H <return>  for immediate help.
- ...                                              
-                                                  
-l.212 ...th = 3in]{./figs/20180514-044756/50.pdf}}
-                                                  
-? 
-File: ./figs/20180514-044756/50.pdf Graphic file (type pdf)
-<use ./figs/20180514-044756/50.pdf>
-./Yuhao_Zhang_A53235904_HW4.tex:212: Unable to load picture or PDF file './figs
-/20180514-044756/50.pdf'.
-<to be read again> 
-                   \GPT@clipend 
-l.212 ...th = 3in]{./figs/20180514-044756/50.pdf}}
-                                                  
-? 
-
-LaTeX Warning: File `./figs/20180514-044756/145.pdf' not found on input line 21
-3.
-
-./Yuhao_Zhang_A53235904_HW4.tex:213: Unable to load picture or PDF file './figs
-/20180514-044756/145.pdf'.
-<to be read again> 
-                   }
-l.213 ...h = 3in]{./figs/20180514-044756/145.pdf}}
-                                                   \\
-? 
-
-./Yuhao_Zhang_A53235904_HW4.tex:213: Package graphics Error: Division by 0.
-
-See the graphics package documentation for explanation.
-Type  H <return>  for immediate help.
- ...                                              
-                                                  
-l.213 ...h = 3in]{./figs/20180514-044756/145.pdf}}
-                                                   \\
-? 
-File: ./figs/20180514-044756/145.pdf Graphic file (type pdf)
-<use ./figs/20180514-044756/145.pdf>
-./Yuhao_Zhang_A53235904_HW4.tex:213: Unable to load picture or PDF file './figs
-/20180514-044756/145.pdf'.
-<to be read again> 
-                   \GPT@clipend 
-l.213 ...h = 3in]{./figs/20180514-044756/145.pdf}}
-                                                   \\
-? 
-
-Underfull \hbox (badness 10000) in paragraph at lines 206--214
-
- []
-
-[5]
-\tf@thm=\write4
-\openout4 = `Yuhao_Zhang_A53235904_HW4.thm'.
-
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 237.
- [6
-
-]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 237.
- (./Yuhao_Zhang_A53235904_HW4.aux)
-Package atveryend Info: Empty hook `AtVeryEndDocument' on input line 237.
-Package atveryend Info: Empty hook `AtEndAfterFileList' on input line 237.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 237.
- ) 
+ 
 Here is how much of TeX's memory you used:
- 12401 strings out of 493007
- 181217 string characters out of 6134605
- 281363 words of memory out of 5000000
- 16241 multiletter control sequences out of 15000+600000
- 12314 words of font info for 60 fonts, out of 8000000 for 9000
+ 12340 strings out of 493007
+ 179749 string characters out of 6134605
+ 278926 words of memory out of 5000000
+ 16197 multiletter control sequences out of 15000+600000
+ 12298 words of font info for 58 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
- 36i,9n,49p,592b,370s stack positions out of 5000i,500n,10000p,200000b,80000s
-
-Output written on Yuhao_Zhang_A53235904_HW4.pdf (6 pages).
+ 36i,7n,38p,588b,329s stack positions out of 5000i,500n,10000p,200000b,80000s
+Output written on Yuhao_Zhang_A53235904_HW4.pdf (4 pages).
