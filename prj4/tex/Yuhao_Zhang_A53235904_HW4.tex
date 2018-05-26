@@ -59,11 +59,27 @@
 %
 %Briefly introduce the problem here. Describe what you have to do and what the goal is. Make sure to cite any references that you might use \cite{knuth}.
 \section{Introduction}
-The project is an implementation of EKF-SLAM on Sunfounder's PiCar-V platform and a webcam attached to it is used. With the help of QR codes as landmarks, the webcam is turned into a distance-bearing sensor.
-\section{Planning based on Vonoroi graph and visibility graph}
-In this project the EKF-SLAM system will be built from scratch. For a thorough introduction to EKF-SLAM, please check \cite{ekf}. In this project, the landmarks used for SLAM will be QR markers. The SLAM will only consider 2D-plane, therefore the landmarks will be abstracted as points on the plane, although theoretically the QR markers can be used as a 3D object that enables more information and features to be extracted. The detail will be discussed in Sec. {\ref{PnP}}.
+The project is an implementation of both Vonoroi diagram \& visibility graph planning on Sunfounder's PiCar-V platform and a webcam attached to it is used. With the help of QR codes as landmarks, the webcam is turned into a distance-bearing sensor.
+\section{Visibility graph}
+\label{Visibility}
+Visibility graph is a way to describe obstacles on the 2-D plane of the robot motion. Each node in the graph represents a point on the plane, and edges connecting vertices indicate that there is a visible connection between these two vertices. In our case of mobile robot on 2-D plane, the nodes will simply be the vertices of the obstacles, if they are approximated as simply polygons. And the collection of edges become the viable roadmap of this plane. 
+
+To utilize this notion, we can use a set of vertices of the polygons to represent the obstacles, a set of points to represent the waypoints and a single point to represent the robot. The edges of the polygons are obstacles. Then in order to plan the path, a shortest path algorithm such as Dijkstra's algorithm can be applied to this graph. 
+
+Planner based on visibility graph has optimal result, i.e. strictly shortest path on the plane, yet it is prune to collision as the path is not safe, for it needs to drive at the vicinity of the obstacles.
+\section{Vonoroi graph}
+\label{Vonoroi}
+An alternative option to visibility graph is the Vonoroi graph, which is technically a partitioning of the plane based on the pre-specified seeds on the plane. The plane is partitioned into regions and each region has its corresponding seed, meaning that the seed is closer to all points inside the region than any other seed. A vertex is then defined as the point that has three or more seeds that are equally distant from it. An edge is a  collection of points that have exactly two seeds that are equally distant from.
+Notice that there may exist edges that are connecting points at infinity instead of finite vertices. 
+
+To apply Vonoroi graph for planning. We use a set of points of the outline of the obstacles to approximate them. These points will server as the seeds of the Vonoroi graph. Further an finite box is drawn as the finite representation of the 2-D plane. This box will automatically eliminate all  edges connecting infinity.
+
+Then the generated Vonoroi graph automatically becomes the roadmap of the plan. To actually plan a path, given staring point and the destination point, the nearest vertices or nearest points on any edge of the Vonoroi graph are obtained as the points to enter/exit the roadmap. The robot will first be driven to the enter point of the Vonoroi graph, then a shortest path algorithm such as Dijkstra's algorithm can be applied to this graph to find the path to the exit point. Finally the robot will exit from the exit point and drive to the destination.
+
+Vonoroi graph constructed this way will yield the roadmap that is most far away from any obstacle on the plane, therefore makes it the safest route and is mostly useful when the optimal path is not required.
 \label{EKF}
 \section{Localization}
+To further improve the performance of the planning, localization of the mobile car can be incorporated.
 One major problem for Sunfounder's PiCar-V platform is the lack of a distance-bearing sensor that would make localization with landmarks much easier. However, with the help of known-sized QR tags as 3D object, it is plausible to convert a plain webcam into a distance-bearing sensor.
 \subsection{Distance and Pose estimation using PnP}
 \label{PnP}
@@ -115,11 +131,19 @@ where $c_x$ is the $x$ principle point as shown in the camera matrix, $c_c$ is t
 With this pose estimation, one can combine a control algorithm with feedback from QR codes detected by camera.
 
 A picture showing the performance of such model is plotted as  Fig. (\ref{QR}).
+<<<<<<< Updated upstream
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=0.7\textwidth]{../figures/bearing_distance.png}
 \caption{The QR code used as a landmark.}\label{QR}
 \end{figure}
+=======
+%\begin{figure}[htbp]
+%\centering
+%\includegraphics[width=0.7\textwidth]{./bearing_distance.png}
+%\caption{The QR code used as a landmark.}\label{QR}
+%\end{figure}
+>>>>>>> Stashed changes
 \section{Kinematics and control law}
 \label{kine}
 The kinematics of the car is orthogonal to the current 
@@ -175,7 +199,11 @@ and $v'=-v$.
 
 \section{implementation and setup}
 
-The EKF-SLAM algorithm purposed in Sec.(\ref{EKF}) is implemented in library \texttt{EKF\_SLAM.py} following and being translated from the Matlab code provided in \cite{ekf}. The pose estimation algorithm purposed in Sec.(\ref{pose}) has been implemented in library \texttt{QRDB.py}.  Additionally, a script that calls these libraries is provided as \texttt{EKF-SLAM-QR-DB.ipynb}. 
+The visibility graph planner purposed in Sec.(\ref{Visibility}) is implemented in visibility.ipynb \texttt{.py} 
+
+
+
+following and being translated from the Matlab code provided in \cite{ekf}. The pose estimation algorithm purposed in Sec.(\ref{pose}) has been implemented in library \texttt{QRDB.py}.  Additionally, a script that calls these libraries is provided as \texttt{EKF-SLAM-QR-DB.ipynb}. 
 
 After initialization, the algorithm is time sampled every $0.5$ seconds and at each step, the camera takes 20 images and runs QR code detection on them. All vision data is precessed for un-distortion. Then the average of the results are taken. The control signal is a constant to enforce the robot moves in circle. The algorithm utilizes the $R-T$ matrix described in Sec.(\ref{pose}) to localize the camera in world frame based on the QR codes scanned.  Finally the EKF-SLAM module will be called to apply Kalman filter on the observations.
 
@@ -187,33 +215,33 @@ After initialization, the algorithm is time sampled every $0.5$ seconds and at e
 %\end{figure}
 \section{Experiment and conclusion}
 The algorithm is run on Sunfounder's PiCar-V platform with the setup map shown as Fig.(\ref{setup}).  The actual photo of the test ground is shown as Fig.{\ref{ph}}.
-\begin{figure}[htbp]
-\centering
-\includegraphics[width=0.7\textwidth]{./figs/20180514-044756/setup.pdf}
-\caption{The initial map and the initial pose of the robot. Data entry denoted as \textit{Simulated} means the optimal situation and \textit{Estimated} means the actual data feedback from the sensor and processed with Kalman filter.}\label{setup}
-\end{figure}
-\begin{figure}[htbp]
-\centering
-\includegraphics[width=0.5\textwidth]{./figs/pg.JPG}
-\caption{The actual photo of the test ground. }\label{ph}
-\end{figure}
+%\begin{figure}[htbp]
+%\centering
+%\includegraphics[width=0.7\textwidth]{./figs/20180514-044756/setup.pdf}
+%\caption{The initial map and the initial pose of the robot. Data entry denoted as \textit{Simulated} means the optimal situation and \textit{Estimated} means the actual data feedback from the sensor and processed with Kalman filter.}\label{setup}
+%\end{figure}
+%\begin{figure}[htbp]
+%\centering
+%\includegraphics[width=0.5\textwidth]{./figs/pg.JPG}
+%\caption{The actual photo of the test ground. }\label{ph}
+%\end{figure}
 The landmarks are cardboards with QR tags attached to. 
 
 Some intermediate results are shown as Fig.{\ref{some}}. It can be seen that the accuracy(distances between means of estimated landmarks and their true position) grows steadily as the robot drives multiple times around the test ground. Also the standard deviations of the estimations (the eclipses of the estimated landmarks) drops drastically as the drive goes on.
 
 
-\begin{figure}[h]
-\subfloat[step 1]{\includegraphics[width = 3in]{./figs/20180514-044756/0.pdf}} 
-\subfloat[step 5]{\includegraphics[width = 3in]{./figs/20180514-044756/5.pdf}}\\
-\subfloat[step 10]{\includegraphics[width = 3in]{./figs/20180514-044756/10.pdf}}
-\subfloat[step 15]{\includegraphics[width = 3in]{./figs/20180514-044756/15.pdf}} \\
-\subfloat[step 20]{\includegraphics[width = 3in]{./figs/20180514-044756/20.pdf}} 
-\subfloat[step 30]{\includegraphics[width = 3in]{./figs/20180514-044756/30.pdf}} \\
-\subfloat[step 50]{\includegraphics[width = 3in]{./figs/20180514-044756/50.pdf}} 
-\subfloat[step 145]{\includegraphics[width = 3in]{./figs/20180514-044756/145.pdf}} \\
-\caption{Intermediate maps as EKF-SLAM goes on. Data entry denoted as \textit{Simulated} means the optimal situation and \textit{Estimated} means the actual data feedback from the sensor and processed with Kalman filter.}
-\label{some}
-\end{figure}
+%\begin{figure}[h]
+%\subfloat[step 1]{\includegraphics[width = 3in]{./figs/20180514-044756/0.pdf}} 
+%\subfloat[step 5]{\includegraphics[width = 3in]{./figs/20180514-044756/5.pdf}}\\
+%\subfloat[step 10]{\includegraphics[width = 3in]{./figs/20180514-044756/10.pdf}}
+%\subfloat[step 15]{\includegraphics[width = 3in]{./figs/20180514-044756/15.pdf}} \\
+%\subfloat[step 20]{\includegraphics[width = 3in]{./figs/20180514-044756/20.pdf}} 
+%\subfloat[step 30]{\includegraphics[width = 3in]{./figs/20180514-044756/30.pdf}} \\
+%\subfloat[step 50]{\includegraphics[width = 3in]{./figs/20180514-044756/50.pdf}} 
+%\subfloat[step 145]{\includegraphics[width = 3in]{./figs/20180514-044756/145.pdf}} \\
+%\caption{Intermediate maps as EKF-SLAM goes on. Data entry denoted as \textit{Simulated} means the optimal situation and \textit{Estimated} means the actual data feedback from the sensor and processed with Kalman filter.}
+%\label{some}
+%\end{figure}
 
 
 %To see the results of the full run, please check \texttt{ani.gif}.
