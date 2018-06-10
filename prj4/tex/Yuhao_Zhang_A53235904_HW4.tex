@@ -131,19 +131,13 @@ where $c_x$ is the $x$ principle point as shown in the camera matrix, $c_c$ is t
 With this pose estimation, one can combine a control algorithm with feedback from QR codes detected by camera.
 
 A picture showing the performance of such model is plotted as  Fig. (\ref{QR}).
-<<<<<<< Updated upstream
+
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=0.7\textwidth]{../figures/bearing_distance.png}
+\includegraphics[width=0.6\textwidth]{../figures/bearing_distance.png}
 \caption{The QR code used as a landmark.}\label{QR}
 \end{figure}
-=======
-%\begin{figure}[htbp]
-%\centering
-%\includegraphics[width=0.7\textwidth]{./bearing_distance.png}
-%\caption{The QR code used as a landmark.}\label{QR}
-%\end{figure}
->>>>>>> Stashed changes
+
 \section{Kinematics and control law}
 \label{kine}
 The kinematics of the car is orthogonal to the current 
@@ -199,37 +193,48 @@ and $v'=-v$.
 
 \section{implementation and setup}
 
-The visibility graph planner purposed in Sec.(\ref{Visibility}) is implemented in visibility.ipynb \texttt{.py} 
+The visibility graph planner purposed in Sec.(\ref{Visibility}) is implemented in \texttt{visibility.ipynb} based on a visibility graph library \texttt{pyvisgraph} using Lee's visibility graph algorithm, the path finding algorithm is the Dijiksra's algorithm. The actual setup of the surroundings and the planned path is plotted as Fig.(\ref{vis}).
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.6\textwidth]{../figures/visibility_graph_planning.eps}
+\caption{The actual setup of the surroundings and the planned path by visibility graph planner}\label{vis}
+\end{figure}
+
+The Vonoroi graph planner purposed in Sec.(\ref{Vonoroi}) is implemented in \texttt{Vonoroi.ipynb}, the obstacle is represented by a set of points. The Vonoroi graph is generated using \texttt{scipy.spatial.Vonoroi} and the graph is stored and managed using \texttt{networkx}. The path finding algorithm is also the Dijiksra's algorithm. The actual setup of the surroundings and the planned path is plotted as Fig.(\ref{vo}).
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.6\textwidth]{../figures/vonoroi_planning.eps}
+\caption{The actual setup of the surroundings and the planned path by Vonoroi graph planner}\label{vo}
+\end{figure}
+
+As of the controller of the robot, one can apply a time-sample linear controller together with an EKF based localization system with the QR tags. Yet for the sake of simplicity, in this project a straight line and constant turning controller is used.
 
 
 
-following and being translated from the Matlab code provided in \cite{ekf}. The pose estimation algorithm purposed in Sec.(\ref{pose}) has been implemented in library \texttt{QRDB.py}.  Additionally, a script that calls these libraries is provided as \texttt{EKF-SLAM-QR-DB.ipynb}. 
-
-After initialization, the algorithm is time sampled every $0.5$ seconds and at each step, the camera takes 20 images and runs QR code detection on them. All vision data is precessed for un-distortion. Then the average of the results are taken. The control signal is a constant to enforce the robot moves in circle. The algorithm utilizes the $R-T$ matrix described in Sec.(\ref{pose}) to localize the camera in world frame based on the QR codes scanned.  Finally the EKF-SLAM module will be called to apply Kalman filter on the observations.
-
-
-%\begin{figure}[htbp]
-%\centering
-%\includegraphics[width=0.7\textwidth]{../ideal_traj.pdf}
-%\caption{One generated trajectory.}\label{ideal}
-%\end{figure}
 \section{Experiment and conclusion}
-The algorithm is run on Sunfounder's PiCar-V platform with the setup map shown as Fig.(\ref{setup}).  The actual photo of the test ground is shown as Fig.{\ref{ph}}.
-%\begin{figure}[htbp]
-%\centering
-%\includegraphics[width=0.7\textwidth]{./figs/20180514-044756/setup.pdf}
-%\caption{The initial map and the initial pose of the robot. Data entry denoted as \textit{Simulated} means the optimal situation and \textit{Estimated} means the actual data feedback from the sensor and processed with Kalman filter.}\label{setup}
-%\end{figure}
-%\begin{figure}[htbp]
-%\centering
-%\includegraphics[width=0.5\textwidth]{./figs/pg.JPG}
-%\caption{The actual photo of the test ground. }\label{ph}
-%\end{figure}
-The landmarks are cardboards with QR tags attached to. 
+The actual performance of the two planners are shown in Tab.(\ref{tab1}). 
+\begin{table}[hp]
+\centering
+\caption{Experiment results}
+\label{tab1}
+\begin{tabular}{lllr}
 
-Some intermediate results are shown as Fig.{\ref{some}}. It can be seen that the accuracy(distances between means of estimated landmarks and their true position) grows steadily as the robot drives multiple times around the test ground. Also the standard deviations of the estimations (the eclipses of the estimated landmarks) drops drastically as the drive goes on.
+Way points    & Planner & Error (m) & Drive time(s)\\
+\hline
+Strat point      & Visibility graph    & $- $ &-   \\
+          & Vonoroi graph        & $- $ &-     \\
+Stop point 1       & Visibility graph     & $0.1 \pm 0.05$ &    6.45 \\
+		& Vonoroi graph     &$0.1 \pm 0.05$ &     7.50\\
+Stop point 2         & Visibility graph     & $0.15 \pm 0.05$    &3.00 \\
+		 & Vonoroi graph      & $0.2 \pm 0.05$   &    4.5\\
+\hline
+\end{tabular}
+\end{table}
+It can be seen that the two planner performs no difference in terms of the driving accuracy. But the route provided by visibility graph planner is much faster than the path produced by Vonoroi graph planner. As the visibility graph planner tends to give dangerous yet optimal path, while the Vonoroi graph planner gives safe yet conservative path, in experiment the robot runs into the obstacle in about $30\%$ of all runs, and the Vonoroi graph planner never drives the robot into collision. The runs that collides with the obstacle are not taken into account in statistics. 
 
-
+The conclusion is visibility graph is for optimal path but poses higher risk of collision, and Vonoroi graph planner yields reliable yet slow route. It depends on the task requirement to decide which one is best suitable.
 %\begin{figure}[h]
 %\subfloat[step 1]{\includegraphics[width = 3in]{./figs/20180514-044756/0.pdf}} 
 %\subfloat[step 5]{\includegraphics[width = 3in]{./figs/20180514-044756/5.pdf}}\\
@@ -246,21 +251,19 @@ Some intermediate results are shown as Fig.{\ref{some}}. It can be seen that the
 
 %To see the results of the full run, please check \texttt{ani.gif}.
 
-Given that PiCar-V's price and the mediocre performance of the webcam equipped, the results are promising. The final map still has some deviation from the estimated map, which might be due to the error of placement of the landmarks. 
 
-The algorithm of this experiment not only utilizes the coordinates generated by the feedback of QR codes, but also calculates the Euler angles with respect to the rotation-transformation matrix, which means that the orientation of the robot can also be calculated per QR marker scan. But this application is irrelevant to the 2D-EKF-SLAM and the performance on the webcam is poor. The reader might find it useful under other settings.
  
 
-\clearpage
-\begin{thebibliography}{9}
-
-\bibitem{ekf} 
-Joan Sol\`a: Simulataneous localization and mapping
-with the extended Kalman filter, retrieved at 05-13-2018,
-\\\texttt{http://www.iri.upc.edu/people/jsola/JoanSola/objectes/...\\curs\_SLAM/SLAM2D/SLAM\%20course.pdf}
-\end{thebibliography}
-
-
+%\clearpage
+%\begin{thebibliography}{9}
+%
+%\bibitem{ekf} 
+%Joan Sol\`a: Simulataneous localization and mapping
+%with the extended Kalman filter, retrieved at 05-13-2018,
+%\\\texttt{http://www.iri.upc.edu/people/jsola/JoanSola/objectes/...\\curs\_SLAM/SLAM2D/SLAM\%20course.pdf}
+%\end{thebibliography}
+%
+%
  
 \end{document}
 
@@ -272,23 +275,7 @@ with the extended Kalman filter, retrieved at 05-13-2018,
 %\caption{Learning curve for steepest-direction coordinate descent and random-feature coordinate descent.}\label{fig1}
 %\end{figure}
 
-%\begin{table}[hp]
-%\centering
-%\caption{Experiment results}
-%\label{tab1}
-%\begin{tabular}{llr}
-%
-%$M$    & Prototype & Error rate (\%) \\
-%\hline
-%1000      & random    & $13.02 \pm  0.73$    \\
-%          & random*        & $11. 84 \pm 0.20$      \\
-%5000       & random     & $6.63 \pm 0.11$      \\
-%		& random*     &$6.42 \pm 0.22$      \\
-%10000       & random     & $5.07 \pm 0.2$     \\
-%		 & random*      & $4.8 \pm 0.26$       \\
-%\hline
-%\end{tabular}
-%\end{table}
+
 
 
 
