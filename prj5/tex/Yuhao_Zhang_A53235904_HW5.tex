@@ -62,19 +62,35 @@
 The project is an implementation of a roomba-like system on Sunfounder's PiCar-V platform and a webcam attached to it is used. With the help of QR codes as landmarks, the webcam is turned into a distance-bearing sensor.
 \section{Architecheture}
 \label{arch}
-This project is be based on hierarchical architecture. Though it is a rather early and awkward architecture especially for dynamic world, since it emphasizes on constructing a detailed world model and then carefully planning the action, it is still suitable for PiCar-V and turning it into a Roomba. The reason is that the robot platform used in this project does not equip any sonar/distance sensor, which makes a reactive architecture such as subsumption difficult to realize. We will rely on a pre-constructed world model(or construed through SLAM) and focus on the planning part, as the sense of the robot is rather weak. Therefore the robot will only have static avoidance functionality.
+This project is be based on hierarchical architecture. Though it is a rather early and awkward architecture especially for dynamic world, since it emphasizes on constructing a detailed world model and then carefully planning the action, it is still suitable for PiCar-V and turning it into a Roomba. The reason is that the robot platform used in this project does not equip any sonar/distance sensor, which makes a reactive architecture such as subsumption difficult to realize. We will rely on a pre-constructed world model(or construed through SLAM) and focus on the planning part, as the sense of the robot is rather weak. Therefore the robot will only have static avoidance functionality. The control flow of the system is depicted as Fig.(\ref{cf}).
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.5\textwidth]{../figs/cf.pdf}
+\caption{The control flow the system}\label{cf}
+\end{figure}
 
 \section{Planner}
 \label{plan}
-The Boustrophedon cellular decomposition is utilized as the planner, please check the referred paper for details. The Boustrophedon cellular decomposition is a variance of trapezoidal decomposition in the sense of dividing the world into cells based on the shape and position of obstacles. Between cells, a usual graph traversal algorithm can be used to determine the route, and within cells, Boustrophedon paths will be generated for the local coverage. An example of such path is shown in 
-
+The Boustrophedon cellular decomposition is utilized as the planner, please check the referred paper for details. The Boustrophedon cellular decomposition is a variance of trapezoidal decomposition in the sense of dividing the world into cells based on the shape and position of obstacles. Between cells, a usual graph traversal algorithm can be used to determine the route, and within cells, Boustrophedon paths will be generated for the local coverage. An example of such path is shown in Fig.(\ref{bp}).
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=0.6\textwidth]{../figs/bp.eps}
 \caption{The Boustrophedon path generated within a rectangular cell}\label{bp}
 \end{figure}
+\section{Coverage guarantee}
+Given that the localization is perfect and the robot can precisely move along the generated trajectory, the Boustrophedon cellular decomposition provides perfect coverage, since it is an exact decomposition of the 2-D plane and inside each cell the cell can be covered perfectly. 
+
+With uncertainty in the system, it becomes trickier to estimate the coverage. Given the error of the localization as $\epsilon$ and assume it is equal to the uncertainty of the motion of the robot. Assuming the width of the cell is $W$ and the width of the robot to be $w$. With the uncertainty the effective width becomes $w\pm \epsilon$. Then the generated Boustrophedon path would have total length 
+$$L=W/w\times W.$$ Therefore the total uncertainty of the coverage is $W/w\times W *\epsilon$, which means the ratio of coverage is: 
+
+$$w/\epsilon.$$
+
+
+
 
 \section{Localization}
+\label{EKF}
 To further improve the performance of the planning, localization of the mobile car can be incorporated.
 One major problem for Sunfounder's PiCar-V platform is the lack of a distance-bearing sensor that would make localization with landmarks much easier. However, with the help of known-sized QR tags as 3D object, it is plausible to convert a plain webcam into a distance-bearing sensor.
 \subsection{Distance and Pose estimation using PnP}
@@ -126,13 +142,65 @@ where $c_x$ is the $x$ principle point as shown in the camera matrix, $c_c$ is t
 
 With this pose estimation, one can combine a control algorithm with feedback from QR codes detected by camera.
 
-A picture showing the performance of such model is plotted as  Fig. (\ref{QR}).
-
-\begin{figure}[htbp]
+A picture showing the performance of such model is plotted as  Fig. (\ref{QR}).\begin{figure}[htbp]
 \centering
-\includegraphics[width=0.6\textwidth]{../figures/bearing_distance.png}
+\includegraphics[width=0.6\textwidth]{../figs/bearing_distance.png}
 \caption{The QR code used as a landmark.}\label{QR}
 \end{figure}
+
+\subsection{EKF}
+To utilize the distance-bearing data of the camera, EKF is used for localization.  For initialization, there are 
+$$
+\bar x =\begin{pmatrix}
+x \\
+y\\
+\theta \\
+\end{pmatrix},
+P=
+\begin{pmatrix}
+0 & 0 & 0 \\
+0  & 0 &0 \\
+0 & 0 & 0 \\
+\end{pmatrix}
+$$,
+where $\bar x$ is the mean vector of robot pose, and $P$ is the covariance matrix. Define the control vector to be $u$, and the perturbation vector to be $n$, one has a generic time-update function:
+$$
+x \leftarrow f(x,u,n)
+$$,
+and the EKF prediction:
+$$
+\bar x \leftarrow f(\bar x, u, 0),
+$$
+$$
+P \leftarrow F_xPF_x^T+F_nNF_n^T,
+$$ 
+where $F_x$ is the Jacobian of $f(\bar x, u)$ and $F_x$ is the Jacobian of $f(\bar x, n)$.
+Further, the observation of land marks can be expressed as an observation function:
+$$
+y=h(x)+v,
+$$
+ where $y$ is the actual measurement, $h$ is the observation function and $v$ is the noise. Then the EKF correction can be written as 
+ $$
+ \bar z = y- h(\bar x)
+ $$
+ 
+ $$
+  Z=H_xPH
+ $$
+ 
+ $$  
+ K=PH_x^TZ^{-1}
+$$
+
+$$
+\bar x \leftarrow +K \bar z
+$$
+
+$$
+P \leftarrow P-KZK^T,
+$$
+
+where $H_x$ is the Jacobian of $h(x)$ and $R$ is the covariance matrix of the measurement noise, $\bar z$ is the innovation mean and $Z$ is the corresponding covariance matrix. $K$ is the Kalman gain.
 
 \section{Kinematics and control law}
 \label{kine}
@@ -188,28 +256,27 @@ and $v'=-v$.
 
 
 \section{implementation and setup}
-
-The visibility graph planner purposed in Sec.(\ref{Visibility}) is implemented in \texttt{visibility.ipynb} based on a visibility graph library \texttt{pyvisgraph} using Lee's visibility graph algorithm, the path finding algorithm is the Dijiksra's algorithm. The actual setup of the surroundings and the planned path is plotted as Fig.(\ref{vis}).
+The EKF localization system purposed in Sec.(\ref{EKF}) is implemented in \texttt{EKF-Localization-QRDB.ipynb}. The planner purposed in Sec.(\ref{EKF}) is implemented in \texttt{coverage.ipynb}. The actual setup of the surroundings and the planned path is plotted as Fig.(\ref{vis}).
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=0.6\textwidth]{../figures/visibility_graph_planning.eps}
-\caption{The actual setup of the surroundings and the planned path by visibility graph planner}\label{vis}
+\includegraphics[width=0.6\textwidth]{../figs/visibility_graph_planning.eps}
+\caption{The actual setup of the surroundings}\label{vis}
 \end{figure}
 
-The Vonoroi graph planner purposed in Sec.(\ref{Vonoroi}) is implemented in \texttt{Vonoroi.ipynb}, the obstacle is represented by a set of points. The Vonoroi graph is generated using \texttt{scipy.spatial.Vonoroi} and the graph is stored and managed using \texttt{networkx}. The path finding algorithm is also the Dijiksra's algorithm. The actual setup of the surroundings and the planned path is plotted as Fig.(\ref{vo}).
-
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=0.6\textwidth]{../figures/vonoroi_planning.eps}
+\includegraphics[width=0.6\textwidth]{../figs/vonoroi_planning.eps}
 \caption{The actual setup of the surroundings and the planned path by Vonoroi graph planner}\label{vo}
 \end{figure}
 
-As of the controller of the robot, one can apply a time-sample linear controller together with an EKF based localization system with the QR tags. Yet for the sake of simplicity, in this project a straight line and constant turning controller is used.
-
-
+As of the controller of the robot, one can apply a time-sample linear controller together with an EKF based localization system with the QR tags. Yet for the sake of simplicity, in this project a straight line and constant turning controller is used. Furthermore, it turns out to be nearly impossible to maneuver PiCar-V along a complex 
+Boustrophedon path, for the cornering radius of the robot is more than 0.5m, which means the robot is almost incapable of any tiny motion with distance smaller than 0.5m.
 
 \section{Experiment and conclusion}
+A movie demonstrating  the performance has been included
+
+The EKF localization system has decent performance(~10 cm error), yet it is very hard to ensure there is always a QR tag in sight to ensure the EKF can be updated in time. Especially when turning at the corner of the planned path, 
 The actual performance of the two planners are shown in Tab.(\ref{tab1}). 
 \begin{table}[hp]
 \centering
